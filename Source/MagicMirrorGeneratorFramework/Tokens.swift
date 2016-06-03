@@ -35,6 +35,7 @@ enum Kinds: String {
     case InstanceMethod = "source.lang.swift.decl.function.method.instance"
     case MethodParameter = "source.lang.swift.decl.var.parameter"
     case ClassDeclaration = "source.lang.swift.decl.class"
+    case StructDeclaration = "source.lang.swift.decl.struct"
     case InstanceVariable = "source.lang.swift.decl.var.instance"
     
     case NoescapeAttribute = "source.decl.attribute.noescape"
@@ -131,6 +132,23 @@ public struct ProtocolDeclaration: ContainerToken {
 }
 
 public struct ClassDeclaration: ContainerToken {
+    // MARK: ContainerToken
+    public let name: String
+    public let accessibility: Accessibility
+    public let range: Range<Int>
+    public let nameRange: Range<Int>
+    public let bodyRange: Range<Int>
+    public let initializers: [Initializer]
+    public let children: [Token]
+    public let implementation: Bool = true
+    
+    // MARK: Class declaration
+    public var hasNoArgInit: Bool {
+        return initializers.filter { $0.parameters.isEmpty }.isEmpty
+    }
+}
+
+public struct StructDeclaration: ContainerToken {
     // MARK: ContainerToken
     public let name: String
     public let accessibility: Accessibility

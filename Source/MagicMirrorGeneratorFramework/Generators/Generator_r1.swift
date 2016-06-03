@@ -26,28 +26,31 @@ struct Generator_r1: Generator {
         
         let properties = children.flatMap { $0 as? InstanceVariable }.filter { $0.accessibility != .Private }
         let functions = children.flatMap { $0 as? ClassMethod }.filter { $0.accessibility != .Private && !$0.name.hasPrefix("init(") }
+        let protocolConformance = token.implementation ? " : MagicMirrorable" : ""
         
         var output: [String] = []
         output += ""
-        output += "extension \(name): MagicMirrorable {"
-        output += ""
+        output += "private struct \(name)_MirrorProperties {"
         output += "    private static let properties: [AnyProperty] = ["
-        output += properties.flatMap { generateProperty(name, property: $0) }
+        output += properties.flatMap { generateProperty(token, property: $0) }
         output += "    ]"
         output += generateFunctions(name, functions: functions)
+        output += "}"
+        output += "extension \(name)\(protocolConformance) {"
         output += "    static var magicMirror: MagicMirror {"
-        output += "        return MagicMirror(properties: properties, methods: methods)"
+        output += "        return MagicMirror(properties: \(name)_MirrorProperties.properties, methods: \(name)_MirrorProperties.methods)"
         output += "    }"
         output += ""
         output += "}"
         return output
     }
     
-    private static func generateProperty(typeName: String, property: InstanceVariable) -> [String] {
+    private static func generateProperty(typeToken: ContainerToken, property: InstanceVariable) -> [String] {
+        let propertyType = typeToken is ClassDeclaration ? "_RefTypeProperty" : "_ValueTypeProperty"
         var output: [String] = []
-        output += "        _RefTypeProperty(name: \"\(property.name)\","
+        output += "        \(propertyType)(name: \"\(property.name)\","
         output += "            visibility: .\(property.accessibility.sourceName.uppercaseFirst),"
-        output += "            getter: { (t: \(typeName)) in t.\(property.name) },"
+        output += "            getter: { (t: \(typeToken.name)) in t.\(property.name) },"
         if property.readOnly || property.setterAccessibility == .Private {
             output += "            setter: nil"
         } else {
@@ -67,7 +70,7 @@ struct Generator_r1: Generator {
         output += functions.enumerate().flatMap {
             generateFunction(typeName, index: $0, token: $1)
         }
-        output += "    ]"
+        output += "        ]"
         return output
     }
     

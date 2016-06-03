@@ -80,6 +80,20 @@ struct Tokenizer_r1: Tokenizer {
                 bodyRange: bodyRange!,
                 initializers: initializers,
                 children: children)
+            
+        case Kinds.StructDeclaration.rawValue:
+            let subtokens = tokenize(dictionary[Key.Substructure.rawValue] as? [SourceKitRepresentable] ?? [])
+            let initializers = subtokens.only(Initializer)
+            let children = subtokens.noneOf(Initializer)
+            
+            return StructDeclaration(
+                name: name,
+                accessibility: accessibility!,
+                range: range!,
+                nameRange: nameRange!,
+                bodyRange: bodyRange!,
+                initializers: initializers,
+                children: children)
 
         case Kinds.InstanceVariable.rawValue:
             let setterAccessibility = (dictionary[Key.SetterAccessibility.rawValue] as? String).flatMap(Accessibility.init)

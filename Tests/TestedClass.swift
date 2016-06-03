@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MagicMirrorFramework
 
 class TestedClass {
     
@@ -42,4 +43,12 @@ class MyTestClass {
 
 class AnotherClass {
     var variable: String = ""
+}
+
+struct TestStruct {
+    var test: String
+}
+
+protocol TestProtocol: MagicMirrorable {
+    var test: String { get }
 }

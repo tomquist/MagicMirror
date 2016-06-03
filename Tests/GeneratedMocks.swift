@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: /Users/tquist/Dropbox/dev/MagicMirror/Tests/TestedClass.swift at 2016-06-02 22:20:33 +0000
+// MARK: - Mocks generated from file: /Users/tquist/Dropbox/dev/MagicMirror/Tests/TestedClass.swift at 2016-06-03 10:10:24 +0000
 
 //
 //  TestedClass.swift
@@ -9,12 +9,12 @@
 //
 
 import Foundation
+import MagicMirrorFramework
 
 
 import MagicMirrorFramework
 
-extension TestedClass: MagicMirrorable {
-
+private struct TestedClass_MirrorProperties {
     private static let properties: [AnyProperty] = [
         _RefTypeProperty(name: "test",
             visibility: .Internal,
@@ -62,15 +62,16 @@ extension TestedClass: MagicMirrorable {
                return t.anotherTestFunction(string: param0, another: param1, callback: param2)
            }
         ),
-    ]
+        ]
+}
+extension TestedClass : MagicMirrorable {
     static var magicMirror: MagicMirror {
-        return MagicMirror(properties: properties, methods: methods)
+        return MagicMirror(properties: TestedClass_MirrorProperties.properties, methods: TestedClass_MirrorProperties.methods)
     }
 
 }
 
-extension MyTestClass: MagicMirrorable {
-
+private struct MyTestClass_MirrorProperties {
     private static let properties: [AnyProperty] = [
         _RefTypeProperty(name: "myProperty",
             visibility: .Internal,
@@ -90,15 +91,16 @@ extension MyTestClass: MagicMirrorable {
                return t.myFunction(param0, parameter2: param1)
            }
         ),
-    ]
+        ]
+}
+extension MyTestClass : MagicMirrorable {
     static var magicMirror: MagicMirror {
-        return MagicMirror(properties: properties, methods: methods)
+        return MagicMirror(properties: MyTestClass_MirrorProperties.properties, methods: MyTestClass_MirrorProperties.methods)
     }
 
 }
 
-extension AnotherClass: MagicMirrorable {
-
+private struct AnotherClass_MirrorProperties {
     private static let properties: [AnyProperty] = [
         _RefTypeProperty(name: "variable",
             visibility: .Internal,
@@ -107,9 +109,47 @@ extension AnotherClass: MagicMirrorable {
         ),
     ]
     private static let methods: [AnyMethod] = [
-    ]
+        ]
+}
+extension AnotherClass : MagicMirrorable {
     static var magicMirror: MagicMirror {
-        return MagicMirror(properties: properties, methods: methods)
+        return MagicMirror(properties: AnotherClass_MirrorProperties.properties, methods: AnotherClass_MirrorProperties.methods)
+    }
+
+}
+
+private struct TestStruct_MirrorProperties {
+    private static let properties: [AnyProperty] = [
+        _ValueTypeProperty(name: "test",
+            visibility: .Internal,
+            getter: { (t: TestStruct) in t.test },
+            setter: { $0.test = $1 }
+        ),
+    ]
+    private static let methods: [AnyMethod] = [
+        ]
+}
+extension TestStruct : MagicMirrorable {
+    static var magicMirror: MagicMirror {
+        return MagicMirror(properties: TestStruct_MirrorProperties.properties, methods: TestStruct_MirrorProperties.methods)
+    }
+
+}
+
+private struct TestProtocol_MirrorProperties {
+    private static let properties: [AnyProperty] = [
+        _ValueTypeProperty(name: "test",
+            visibility: .Internal,
+            getter: { (t: TestProtocol) in t.test },
+            setter: nil
+        ),
+    ]
+    private static let methods: [AnyMethod] = [
+        ]
+}
+extension TestProtocol {
+    static var magicMirror: MagicMirror {
+        return MagicMirror(properties: TestProtocol_MirrorProperties.properties, methods: TestProtocol_MirrorProperties.methods)
     }
 
 }
